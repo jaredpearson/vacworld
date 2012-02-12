@@ -21,6 +21,20 @@ public class VacAgent
 	private Node currentNode;
 	private Direction facing;
 	
+	public VacAgent() {
+		this(new NodeMap());
+	}
+	
+	public VacAgent(NodeMap nodeMap) {
+		this.nodeMap = nodeMap;
+		
+		//we always start in node(0,0), facing north
+		currentNode = nodeMap.getNode(0, 0);
+		currentNode.setType(NodeType.OPEN);
+		currentNode.setVisited(true);
+		facing = Direction.NORTH;
+	}
+	
 	@Override
 	public void see(Percept p) {
 		this.currentPercept = (VacPercept)p;
@@ -28,15 +42,6 @@ public class VacAgent
 
 	@Override
 	public Action selectAction() {
-		
-		//if this is the first node, then we create an open node at 0,0
-		if(currentNode == null) {
-			currentNode = nodeMap.getNode(0, 0);
-			currentNode.setType(NodeType.OPEN);
-			currentNode.setVisited(true);
-			facing = Direction.NORTH;
-		}
-		
 		//check to see if node in front is open
 		Node facingNode = currentNode.getNode(facing);
 		if(currentPercept.seeObstacle()) {
